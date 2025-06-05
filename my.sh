@@ -17,4 +17,44 @@ for image in "$@"; do
         @csv' >> vulnerability_scan.csv
 done
 
+awk -F, '
+function csv_quote(field) {
+    if (field ~ /[",;]/) {
+        gsub(/"/, "\"\"", field)
+        return "\"" field "\""
+    }
+    return field
+}
+BEGIN { 
+    OFS=",";
+    print "Package Name,Severity,Version,Fixed,Description,CVE ID,Source"
+}
+NR==1 { next }  # Skip header
+{
+    for (i=1; i<=NF; i++) {
+        gsub(/^"|"$/, "", $i)
+    }
+    key = $1 "," $6
+    if (!(key in seen)) {
+        for (i=1; i<=6; i++) fields[key,i]=$i
+        sources[key]=$7
+    } else {
+        if (index(sources[key], $7) == 0) {
+            sources[key]=sources[key] "; " $7
+        }
+    }
+}
+END {
+    for (key in sources) {
+        out=""
+        for (i=1; i<=6; i++) {
+            gsub(/"/, "\"\"", fields[key,i])
+            out = out (i==1 ? "" : OFS) "\"" fields[key,i] "\""
+        }
+        gsub(/"/, "\"\"", sources[key])
+        print out OFS "\"" sources[key] "\""
+    }
+}' vulnerability_scan_raw.csv > vulnerability_scan_deduped.csv
 
+echo "Raw scan data saved to vulnerability_scan_raw.csv"
+echo "Deduplicated report saved to vulnerability_scan_deduped.csv"
