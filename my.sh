@@ -7,7 +7,7 @@ if ! command -v trivy > /dev/null; then
     exit 1
     fi 
     
-echo "Package Name,Severity,Version,Fixed,Description,CVE ID,Source" > vulnerability_scan.csv
+echo "Package Name,Severity,Version,Fixed,Description,CVE ID,Source" > vulnerability_scan_raw.csv
 
 for image in "$@"; do 
     echo "Scanning $image"
@@ -54,7 +54,7 @@ END {
         gsub(/"/, "\"\"", sources[key])
         print out OFS "\"" sources[key] "\""
     }
-}' vulnerability_scan_raw.csv > vulnerability_scan_deduped.csv
+}' vulnerability_scan_raw.csv > vulnerability_scan.csv
 
 echo "Raw scan data saved to vulnerability_scan_raw.csv"
-echo "Deduplicated report saved to vulnerability_scan_deduped.csv"
+echo "Duplicated report saved to vulnerability_scan.csv"
