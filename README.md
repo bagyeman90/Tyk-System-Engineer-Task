@@ -82,4 +82,3 @@ The output CSV files contain the following columns:
 - Combines sources when similar vulnerabilities are found
 - Properly handles CSV escaping and formatting
 
-## Example Output
