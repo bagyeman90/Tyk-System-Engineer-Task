@@ -61,7 +61,7 @@ chmod +x my.sh
 The script generates two CSV files:
 
 1. `vulnerability_scan_raw.csv`: Contains all raw vulnerability data
-2. `vulnerability_scan_deduped.csv`: Contains deduplicated vulnerabilities with combined sources
+2. `vulnerability_scan.csv`: Contains deduplicated vulnerabilities with combined sources
 
 ### CSV Format
 
